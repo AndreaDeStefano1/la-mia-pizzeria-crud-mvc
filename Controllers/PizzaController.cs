@@ -61,6 +61,48 @@ namespace la_mia_pizzeria.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            using(PizzaContext db = new PizzaContext())
+            {
+                Pizza p = db.Pizzas.Find(id);
+                return View(p);
+            }
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(int id, Pizza formData)
+        {
+            using (PizzaContext db = new PizzaContext())
+            {
+                Pizza p = db.Pizzas.Find(id);
+                p.Name = formData.Name;
+                p.Description = formData.Description;
+                p.Image = formData.Image;
+                p.Price = formData.Price;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            using (PizzaContext db = new PizzaContext())
+            {
+                Pizza p = db.Pizzas.Find(id);
+                
+                db.Pizzas.Remove(p);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

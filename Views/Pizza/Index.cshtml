@@ -32,7 +32,16 @@
                                 <td>@pizza.Description</td>
                                 <td><img src="@pizza.Image" /></td>
                                 <td>@pizza.Price €</td>
-                                <td><a class="btn btn-warning" href="@Url.Action("Show", "Pizza",new { Id = pizza.Id } )">Vedi</a></td>
+                                <td>
+                                    <a class="btn btn-info" href="@Url.Action("Show", "Pizza", new { Id = pizza.Id } )">Vedi</a>
+                                    <a class="btn btn-warning" href="@Url.Action("Update", "Pizza", new { Id = pizza.Id } )">Modifica</a>
+                                    <form asp-action="Delete" asp-controller="Pizza" asp-route-id="@pizza.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class=" btn btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                 </td>
                             </tr>
                         }
 
