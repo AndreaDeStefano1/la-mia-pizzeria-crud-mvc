@@ -21,7 +21,7 @@ namespace la_mia_pizzeria.Controllers
             
             using (PizzaContext db = new PizzaContext())
             {
-                List<Pizza> pizze = db.Pizzas.OrderByDescending(pizza => pizza.Id).ToList<Pizza>();
+                List<Pizza> pizze = db.Pizzas.OrderByDescending(pizza => pizza.PizzaId).ToList<Pizza>();
                 return View(pizze);
             }
             
@@ -30,7 +30,7 @@ namespace la_mia_pizzeria.Controllers
         {
             using (PizzaContext db = new PizzaContext())
             {
-                Pizza p = db.Pizzas.Where(s => s.Id == id).First<Pizza>();
+                Pizza p = db.Pizzas.Where(s => s.PizzaId == id).Include("Category").First<Pizza>();
                 return View(p);
 
             }
@@ -38,24 +38,39 @@ namespace la_mia_pizzeria.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            using (PizzaContext db = new())
+            {
+                CategoryPizza pizzaCategories = new CategoryPizza();
+
+             
+                pizzaCategories.Categories = db.Categories.ToList();
+
+                return View(pizzaCategories);
+            }
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Pizza pizza)
+        public IActionResult Create(CategoryPizza formData)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("Create", pizza);
-            }
             using (PizzaContext db = new PizzaContext())
             {
-                Pizza p = new Pizza();
-                p.Name = pizza.Name;
-                p.Description = pizza.Description;
-                p.Image = pizza.Image;
-                p.Price = pizza.Price;
-                db.Add(p);
+                if (!ModelState.IsValid)
+                {
+                    //CategoryPizza c = new();
+                    //c.Pizza = pizza;
+                    //c.Categories = db.Categories.ToList();
+                    formData.Categories = db.Categories.ToList();
+                    return View("Create", formData);
+                }
+
+                //Pizza p = new Pizza();
+                //p.Name = pizza.Name;
+                //p.Description = pizza.Description;
+                //p.Image = pizza.Image;
+                //p.Price = pizza.Price;
+                //p.CategoryId = pizza.CategoryId;
+                db.Add(formData);
                 db.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -66,22 +81,31 @@ namespace la_mia_pizzeria.Controllers
         {
             using(PizzaContext db = new PizzaContext())
             {
-                Pizza p = db.Pizzas.Find(id);
-                return View(p);
+                Pizza p = db.Pizzas.Where(pizza => pizza.PizzaId == id).Include("Category").First();
+                List<Category> category = db.Categories.ToList();
+                CategoryPizza pizzaECategorie = new CategoryPizza();
+                pizzaECategorie.Pizza = p;
+                pizzaECategorie.Categories = category;
+                return View(pizzaECategorie);
             }
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(int id, Pizza formData)
+        public IActionResult Update(int id, CategoryPizza formData)
         {
             using (PizzaContext db = new PizzaContext())
             {
+                if (!ModelState.IsValid)
+                {
+                    return View("Update", formData);
+                }
                 Pizza p = db.Pizzas.Find(id);
-                p.Name = formData.Name;
-                p.Description = formData.Description;
-                p.Image = formData.Image;
-                p.Price = formData.Price;
+                p.Name = formData.Pizza.Name;
+                p.Description = formData.Pizza.Description;
+                p.Image = formData.Pizza.Image;
+                p.Price = formData.Pizza.Price;
+                p.CategoryId = formData.Pizza.CategoryId;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

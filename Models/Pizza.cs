@@ -6,7 +6,7 @@ namespace la_mia_pizzeria.Models
     public class Pizza
     {
         
-        public int Id { get; set; }
+        public int PizzaId { get; set; }
 
         [Required(ErrorMessage = "Il campo nome è obbligatorio")]
         [StringLength(25, ErrorMessage = "Il nome non può avere più di 25 caratteri")]
@@ -24,13 +24,16 @@ namespace la_mia_pizzeria.Models
         [NotNegativeOrZero]
         public double Price { get; set; }
 
+        public int? CategoryId { get; set; } 
+        public Category? Category { get; set; }
+
         public Pizza()
         {
         }
 
         public Pizza(int id, string name, string description, string image, double price)
         {
-            Id = id;
+            PizzaId = id;
             Name = name;
             Description = description;
             Image = image;
