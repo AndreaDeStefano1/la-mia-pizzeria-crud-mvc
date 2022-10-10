@@ -89,11 +89,12 @@ namespace la_mia_pizzeria.Controllers
         {
             using(PizzaContext db = new PizzaContext())
             {
-                Pizza p = db.Pizzas.Where(pizza => pizza.PizzaId == id).Include("Category").First();
+                Pizza p = db.Pizzas.Where(pizza => pizza.PizzaId == id).Include("Category").Include("Ingredients").First();
                 List<Category> category = db.Categories.ToList();
                 CategoryPizza pizzaECategorie = new CategoryPizza();
                 pizzaECategorie.Pizza = p;
                 pizzaECategorie.Categories = category;
+                pizzaECategorie.Ingredients = db.Ingredients.ToList();
                 return View(pizzaECategorie);
             }
         }
@@ -106,14 +107,19 @@ namespace la_mia_pizzeria.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    formData.Categories = db.Categories.ToList();
+                    formData.Ingredients = db.Ingredients.ToList();
+                    formData.Pizza.Ingredients = db.Ingredients.Where(i => formData.IngredientIds.Contains(i.Id)).ToList();
+                    formData.Pizza.PizzaId = id;
                     return View("Update", formData);
                 }
-                Pizza p = db.Pizzas.Find(id);
+                Pizza p = db.Pizzas.Include("Ingredients").Where(pizza => pizza.PizzaId == id).First();
                 p.Name = formData.Pizza.Name;
                 p.Description = formData.Pizza.Description;
                 p.Image = formData.Pizza.Image;
                 p.Price = formData.Pizza.Price;
                 p.CategoryId = formData.Pizza.CategoryId;
+                p.Ingredients = db.Ingredients.Where(i => formData.IngredientIds.Contains(i.Id)).ToList();
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
