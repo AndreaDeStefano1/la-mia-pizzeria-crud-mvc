@@ -3,6 +3,7 @@
 <div class="container">
     <form method="post" action="@Url.Action("Create", "Pizza")">
         @Html.AntiForgeryToken()
+        
         <div class="mb-3">
             <strong>Nome:</strong>
             <input asp-for="Pizza.Name" class="d-block w-100" />
@@ -33,6 +34,25 @@
             </select>
             <span asp-validation-for="Pizza.CategoryId" class="text-danger"></span>
         </div>
+
+        <div class="mb-3">
+            <strong>Ingredienti:</strong>
+            <select multiple asp-for="IngredientIds" class="form-select">
+                @foreach (Ingredient ingredient in Model.Ingredients)
+                {
+                   <option value="@ingredient.Id">@ingredient.Name</option> 
+                   @* <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="@ingredient.Name" id="@ingredient.Id">
+                        <label asp-for="IngredientNames" value="@ingredient.Name" class="form-check-label" for="@ingredient.Id">
+                            @ingredient.Name
+                        </label>
+                    </div>*@
+                }
+            </select>
+            <span asp-validation-for="IngredientIds" class="text-danger"></span>
+        </div>
+
+
         <div class="text-end">
             <input type="submit" class="btn btn-small btn-info" value="Salva">
         </div>

@@ -4,13 +4,19 @@
     <div class="row">
         <div class="col">
 
-           <h1>@Model.Name <span class=" my-5">@Model.Price</span></h1>
+            <h1>@Model.Name <span class=" my-5">@Model.Price €</span></h1>
             <div>
                 <img src="@Model.Image" />
             </div>
-            <p>@Model.Description</p>
-            <p>@Model.Category.Name</p>
-           
+            <h2>Descrizione: <span class=" fs-4"><i>@Model.Description</i></span></h2>
+            <h2>Categoria: <span class=" fs-4"><i>@Model.Category.Name</i></span></h2>
+            <h2>Ingredienti: </h2>
+            <ul>
+                @foreach (Ingredient ingredient in Model.Ingredients)
+                {
+                    <li>@ingredient.Name</li>
+                }
+            </ul>
 
         </div>
     </div>
