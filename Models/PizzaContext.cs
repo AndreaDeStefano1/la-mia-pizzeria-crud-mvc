@@ -1,10 +1,21 @@
-﻿using System.Data.Common;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace la_mia_pizzeria.Models
 {
-    public class PizzaContext : DbContext
+    public class PizzaContext : IdentityDbContext<IdentityUser>
     {
+        public PizzaContext()
+        {
+
+        }
+
+        public PizzaContext(DbContextOptions<PizzaContext> options)
+        : base(options)
+        {
+        }
+
         public DbSet<Pizza> Pizzas { get; set; }
         
         public DbSet<Category> Categories { get; set; }
