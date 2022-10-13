@@ -1,0 +1,29 @@
+﻿@model List<Pizza>
+
+<div class="container">
+    <div class=" row">
+        <div class=" col">
+            <h1>Benvenuto nella nostra pizzeria</h1>
+
+            <h3 class="text-center my-5">Pizze disponibili</h3>
+
+            <div class="d-flex pb-5">
+
+                @foreach (Pizza item in Model)
+                {
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="@item.Image" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Description</p>
+                            <a href="#" class="btn btn-primary ">@item.Price.ToString("0.00 €")</a>
+                        </div>
+                    </div>
+
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
